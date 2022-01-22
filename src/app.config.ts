@@ -43,13 +43,13 @@ export const EMAIL = {
 };
 
 export const MAIL_SENDGRID = {
-  host: 'smtp.sendgrid.net',
-  port: 587,
-  secure: false,
-  user: 'apikey',
-  pass: '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',
-  name: 'Allemant Peritos Valuadores',
-  email: 'info@rvrtelecomunicaciones.com',
+  host: process.env.host_mail,
+  port: process.env.port_mail,
+  secure: process.env.secure_mail,
+  user: process.env.user_mail,
+  pass: process.env.pass_mail,
+  name: process.env.name_mail,
+  email: process.env.email_mail,
 };
 
 export const PROJECT_EMAIL = {
