@@ -8,6 +8,7 @@ import { User } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { HelperModule } from './processors/helper/helper.module';
 import { CotizacionModule } from './modules/cotizacion/cotizacion.module';
+import { AreasModule } from './modules/areas/areas.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { CotizacionModule } from './modules/cotizacion/cotizacion.module';
     TokensModule,
     HelperModule,
     CotizacionModule,
+    AreasModule,
   ],
   exports: [TypeOrmModule],
 
