@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateAreaDto {
-  @ApiProperty()
+  @ApiProperty({ required: true, description: 'Nombre del Área' })
+  @IsNotEmpty({ message: 'Requiere Obligatoriamente ingresar un Área' })
   @IsString({
     message: 'Ingrese texto para la descripción del Área',
   })

@@ -7,12 +7,14 @@ import cors from 'cors';
 import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import express, { json, urlencoded } from 'express';
+import { ValidationPipe } from '@nestjs/common';
 
 const PORT = process.env.PORT || 8080;
 const PREFIX = process.env.PREFIX || '/';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
 
   const options = new DocumentBuilder()
     .setTitle('Allemant Peritos Valuadores - SGI')
