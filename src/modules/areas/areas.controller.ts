@@ -63,8 +63,25 @@ export class AreasController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createRole(@Body() createAreaDto: CreateAreaDto): Promise<string> {
+  async createArea(@Body() createAreaDto: CreateAreaDto): Promise<string> {
     return await this.areaService.createArea(createAreaDto);
+  }
+
+  @ApiOperation({
+    summary: 'Modificar Área',
+    description: 'Modificar el Área correspondiente',
+  })
+  @ApiOkResponse({
+    type: String,
+    description: 'Área modificada correctamente',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Patch(':id')
+  async modifyAreaById(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateAreaDto: UpdateAreaDto,
+  ): Promise<string> {
+    return await this.areaService.updateAreaById(id, updateAreaDto);
   }
 
   @ApiOperation({
@@ -81,22 +98,5 @@ export class AreasController {
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
     return await this.areaService.deleteArea(id);
-  }
-
-  @ApiOperation({
-    summary: 'Modificar Área',
-    description: 'Modificar el Área correspondiente',
-  })
-  @ApiOkResponse({
-    type: String,
-    description: 'Área modificada correctamente',
-  })
-  @HttpCode(HttpStatus.OK)
-  @Patch(':id')
-  async modifyAreaById(
-    @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateRoleDto: UpdateAreaDto,
-  ): Promise<string> {
-    return await this.areaService.updateAreaById(id, updateRoleDto);
   }
 }

@@ -4,11 +4,16 @@ import { ConfigModule, ConfigService } from 'nestjs-config';
 import * as path from 'path';
 import { AuthModule } from './modules/auth/auth.module';
 import { TokensModule } from './modules/tokens/tokens.module';
-import { User } from './modules/users/entities/user.entity';
 import { UsersModule } from './modules/users/users.module';
 import { HelperModule } from './processors/helper/helper.module';
 import { CotizacionModule } from './modules/cotizacion/cotizacion.module';
 import { AreasModule } from './modules/areas/areas.module';
+import { TipoServiciosModule } from './modules/tipo-servicios/tipo-servicios.module';
+import { TipoCotizacionesModule } from './modules/tipo-cotizaciones/tipo-cotizaciones.module';
+import { EstadoCotizacionesModule } from './modules/estado-cotizaciones/estado-cotizaciones.module';
+import { DesglosesModule } from './modules/desgloses/desgloses.module';
+import { MonedasModule } from './modules/monedas/monedas.module';
+import { EstadoCoordinacionesModule } from './modules/estado-coordinaciones/estado-coordinaciones.module';
 
 @Module({
   imports: [
@@ -48,6 +53,12 @@ import { AreasModule } from './modules/areas/areas.module';
     HelperModule,
     CotizacionModule,
     AreasModule,
+    TipoServiciosModule,
+    TipoCotizacionesModule,
+    EstadoCotizacionesModule,
+    DesglosesModule,
+    MonedasModule,
+    EstadoCoordinacionesModule,
   ],
   exports: [TypeOrmModule],
 

@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, ValidateIf } from 'class-validator';
 
-export class UpdateAreaDto {
-  @ApiProperty({ required: false, description: 'Nombre del Área' })
+export class UpdateTipoServicioDto {
+  @ApiProperty({ required: false, description: 'Nombre del Tipo de Servicio' })
   @IsString({
-    message: 'Ingrese texto para la descripción del Área',
+    message: 'Ingrese texto para la descripción del Tipo de Servicio',
   })
   @ValidateIf((o) => o.nombre != '')
   @IsOptional()

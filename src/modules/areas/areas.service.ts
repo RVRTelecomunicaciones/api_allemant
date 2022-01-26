@@ -64,10 +64,9 @@ export class AreasService {
     if (!existArea) {
       throw new NotFoundException(`Área con id ${id} no existe`);
     }
-    const {
-      raw: { affectedRows },
-    } = await this.areaRepository.update(id, updateAreaDto);
-    if (affectedRows) {
+    const updateResponse = await this.areaRepository.update(id, updateAreaDto);
+
+    if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
       return 'Error de modificación';
@@ -79,10 +78,10 @@ export class AreasService {
     if (!existArea) {
       throw new HttpException(`Área con id ${id} no existe`, HttpStatus.OK);
     }
-    const {
-      raw: { affectedRows },
-    } = await this.areaRepository.softDelete(id);
-    if (affectedRows) {
+
+    const deleteResponse = await this.areaRepository.softDelete(id);
+
+    if (deleteResponse.affected) {
       return 'Eliminado con éxito';
     } else {
       return 'No se pudo eliminar';
