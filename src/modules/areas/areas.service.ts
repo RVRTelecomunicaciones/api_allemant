@@ -1,6 +1,7 @@
 import { PageMetaDto } from '@app/dto/page-meta.dto';
 import { PageOptionsDto } from '@app/dto/page-metaoption.dto';
 import { PageDto } from '@app/dto/page.dto';
+import DataNotFoundException from '@app/exceptions/dataNotFound.exception';
 import {
   HttpException,
   HttpStatus,
@@ -8,6 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { stringify } from 'querystring';
 import { Repository } from 'typeorm';
 import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
@@ -23,7 +25,7 @@ export class AreasService {
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Area>> {
     const queryBuilder = this.areaRepository.createQueryBuilder('area');
     queryBuilder
-      .orderBy('area.createdAt', pageOptionsDto.order)
+      .orderBy({ 'area.created_at': pageOptionsDto.order })
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
@@ -64,10 +66,9 @@ export class AreasService {
     if (!existArea) {
       throw new NotFoundException(`Área con id ${id} no existe`);
     }
-    const {
-      raw: { affectedRows },
-    } = await this.areaRepository.update(id, updateAreaDto);
-    if (affectedRows) {
+    const updateResponse = await this.areaRepository.update(id, updateAreaDto);
+    console.log(updateResponse.affected);
+    if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
       return 'Error de modificación';
@@ -79,13 +80,11 @@ export class AreasService {
     if (!existArea) {
       throw new HttpException(`Área con id ${id} no existe`, HttpStatus.OK);
     }
-    const {
-      raw: { affectedRows },
-    } = await this.areaRepository.softDelete(id);
-    if (affectedRows) {
-      return 'Eliminado con éxito';
+    const deleteResponse = await this.areaRepository.softDelete(id);
+    if (!deleteResponse.affected) {
+      throw new DataNotFoundException(id);
     } else {
-      return 'No se pudo eliminar';
+      return 'Se elimino correctamente';
     }
   }
 }
