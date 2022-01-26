@@ -1,6 +1,7 @@
 import { PageMetaDto } from '@app/dto/page-meta.dto';
 import { PageOptionsDto } from '@app/dto/page-metaoption.dto';
 import { PageDto } from '@app/dto/page.dto';
+import DataNotFoundException from '@app/exceptions/dataNotFound.exception';
 import {
   HttpException,
   HttpStatus,
@@ -8,6 +9,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { stringify } from 'querystring';
 import { Repository } from 'typeorm';
 import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
@@ -23,7 +25,7 @@ export class AreasService {
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Area>> {
     const queryBuilder = this.areaRepository.createQueryBuilder('area');
     queryBuilder
-      .orderBy('area.createdAt', pageOptionsDto.order)
+      .orderBy({ 'area.created_at': pageOptionsDto.order })
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
@@ -65,7 +67,11 @@ export class AreasService {
       throw new NotFoundException(`Área con id ${id} no existe`);
     }
     const updateResponse = await this.areaRepository.update(id, updateAreaDto);
+<<<<<<< HEAD
 
+=======
+    console.log(updateResponse.affected);
+>>>>>>> aedd9b7deac3e311c0db64a1231adde3836834f7
     if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
@@ -78,13 +84,19 @@ export class AreasService {
     if (!existArea) {
       throw new HttpException(`Área con id ${id} no existe`, HttpStatus.OK);
     }
+<<<<<<< HEAD
 
     const deleteResponse = await this.areaRepository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';
+=======
+    const deleteResponse = await this.areaRepository.softDelete(id);
+    if (!deleteResponse.affected) {
+      throw new DataNotFoundException(id);
+>>>>>>> aedd9b7deac3e311c0db64a1231adde3836834f7
     } else {
-      return 'No se pudo eliminar';
+      return 'Se elimino correctamente';
     }
   }
 }
