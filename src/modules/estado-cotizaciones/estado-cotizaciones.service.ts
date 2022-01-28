@@ -68,8 +68,7 @@ export class EstadoCotizacionesService {
     const existEstadoCotizacion = await this.estadoCotizacionRepository.findOne(
       id,
     );
-    console.log('Update Estado Cotización');
-    console.log(existEstadoCotizacion);
+
     if (!existEstadoCotizacion) {
       throw new NotFoundException(`Estado de Cotización id ${id} no existe`);
     }
@@ -89,7 +88,10 @@ export class EstadoCotizacionesService {
     const existEstadoCotizacion = await this.estadoCotizacionRepository.findOne(
       id,
     );
+    console.log(existEstadoCotizacion);
     if (!existEstadoCotizacion) {
+      console.log('existEstadoCotizacion');
+      console.log(existEstadoCotizacion);
       throw new HttpException(
         `Estado de Cotización con id ${id} no existe`,
         HttpStatus.OK,

@@ -11,6 +11,7 @@ import {
   Param,
   ParseIntPipe,
   Patch,
+  Post,
   Query,
 } from '@nestjs/common';
 import {
@@ -19,11 +20,12 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { CreateEstadoCotizacionDto } from './dto/create-estado-cotizacion.dto';
 import { UpdateEstadoCotizacionDto } from './dto/update-estado-cotizacion.dto';
 import { EstadoCotizacion } from './entities/estado-cotizacion.entity';
 import { EstadoCotizacionesService } from './estado-cotizaciones.service';
 
-@ApiTags('ESTADO-COTIZACION')
+@ApiTags('ESTADO-COTIZACIONES')
 @ApiBearerAuth()
 @ApiAuth()
 @Controller('estado-cotizaciones/')
@@ -46,6 +48,24 @@ export class EstadoCotizacionesController {
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<EstadoCotizacion>> {
     return this.estadoCotizacionService.findAll(pageOptionsDto);
+  }
+
+  @ApiOperation({
+    summary: 'Crear Estados de Cotización',
+    description: 'Creación de Estados de Cotización de la Empresa',
+  })
+  @ApiOkResponse({
+    type: String,
+    description: 'Estados de Cotización creado correctamente',
+  })
+  @HttpCode(HttpStatus.CREATED)
+  @Post()
+  async createArea(
+    @Body() createEstadoCotizacionDto: CreateEstadoCotizacionDto,
+  ): Promise<string> {
+    return await this.estadoCotizacionService.createEstadoCotizacion(
+      createEstadoCotizacionDto,
+    );
   }
 
   @ApiOperation({

@@ -53,7 +53,7 @@ export class DesglosesService {
     const desglose: Desglose =
       this.desgloseRepository.create(createDesgloseDto);
     await this.desgloseRepository.save(desglose);
-    return 'Área creada con éxito';
+    return 'Desglose creada con éxito';
   }
 
   async updateDesgloseById(

@@ -25,7 +25,7 @@ import { CreateDesgloseDto } from './dto/create-desglose.dto';
 import { UpdateDesgloseDto } from './dto/update-desglose.dto';
 import { Desglose } from './entities/desglose.entity';
 
-@ApiTags('DESGLOSE')
+@ApiTags('DESGLOSES')
 @ApiBearerAuth()
 @ApiAuth()
 @Controller('desgloses/')

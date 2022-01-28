@@ -3,6 +3,6 @@ import { Column, Entity } from 'typeorm';
 
 @Entity('co_cotizacion_tipo')
 export class TipoCotizacion extends SharedEntity {
-  @Column({ type: 'varchar', nullable: false, length: 10, name: 'nombre' })
+  @Column({ type: 'varchar', nullable: false, length: 20, name: 'nombre' })
   nombre: string;
 }

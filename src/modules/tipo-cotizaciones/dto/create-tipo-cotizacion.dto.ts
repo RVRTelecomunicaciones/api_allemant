@@ -9,8 +9,8 @@ export class CreateTipoCotizacionDto {
   @IsString({
     message: 'Ingrese texto para la descripción del Tipo de Cotización',
   })
-  @Length(4, 10, {
-    message: 'Se requiere de 4 a 10 caracteres',
+  @Length(4, 20, {
+    message: 'Se requiere de 4 a 20 caracteres',
   })
   nombre: string;
 }

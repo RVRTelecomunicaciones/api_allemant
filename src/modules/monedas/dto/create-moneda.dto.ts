@@ -42,8 +42,8 @@ export class CreateMonedaDto {
   @IsString({
     message: 'Ingrese texto para la descripción de la Moneda',
   })
-  @Length(3, 3, {
-    message: 'Se requiere 3 caracteres',
+  @Length(3, 25, {
+    message: 'Se requiere de 3 a 25 caracteres',
   })
   nombre: string;
 }

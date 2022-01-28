@@ -83,7 +83,7 @@ export class MonedasController {
 
   @ApiOperation({
     summary: 'Eliminar Moneda',
-    description: 'Eliminar Moneda basado en la identificación del Area',
+    description: 'Eliminar Moneda basado en la identificación',
   })
   @ApiOkResponse({
     type: String,
@@ -91,7 +91,7 @@ export class MonedasController {
   })
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  async destroyAreaById(
+  async destroyMonedaById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
     return await this.monedaService.deleteMoneda(id);
