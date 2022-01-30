@@ -1,7 +1,6 @@
 import { PageMetaDto } from '@app/dto/page-meta.dto';
 import { PageOptionsDto } from '@app/dto/page-metaoption.dto';
 import { PageDto } from '@app/dto/page.dto';
-import DataNotFoundException from '@app/exceptions/dataNotFound.exception';
 import {
   HttpException,
   HttpStatus,
@@ -9,7 +8,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { stringify } from 'querystring';
 import { Repository } from 'typeorm';
 import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';

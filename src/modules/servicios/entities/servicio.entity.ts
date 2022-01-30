@@ -4,11 +4,11 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 @Entity('co_servicio')
 export class Servicio extends SharedEntity {
-  @Column({ type: 'varchar', nullable: false, length: 50, name: 'nombre' })
+  @Column({ type: 'varchar', nullable: false, length: 51, name: 'nombre' })
   nombre: string;
 
   /*DONDE VA FK */
-  @ManyToOne(() => TipoServicio, (tipoServcio) => tipoServcio.servicios)
+  @ManyToOne(() => TipoServicio, (tipoServicio) => tipoServicio.servicios)
   //@JoinColumn({ name: 'tipoServicioId' })
-  tipoServicioId: TipoServicio;
+  tipoServicio: TipoServicio;
 }

@@ -7,6 +7,6 @@ export class TipoServicio extends SharedEntity {
   @Column({ type: 'varchar', nullable: false, length: 50, name: 'nombre' })
   nombre: string;
 
-  @OneToMany(() => Servicio, (servicio) => servicio.tipoServicioId)
+  @OneToMany(() => Servicio, (servicio) => servicio.tipoServicio)
   servicios: Servicio[];
 }

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TipoServicio } from '../tipo-servicios/entities/tipo-servicio.entity';
 import { CreateServicioDto } from './dto/create-servicio.dto';
 import { UpdateServicioDto } from './dto/update-servicio.dto';
 import { Servicio } from './entities/servicio.entity';
@@ -24,7 +25,7 @@ export class ServiciosService {
     const queryBuilder =
       this.servicioRepository.createQueryBuilder('co_servicio');
     queryBuilder
-      .leftJoinAndSelect('co_servicio.tipoServicioId', 'id')
+      .leftJoinAndSelect('co_servicio.tipoServicio', 'servicios')
       .orderBy('co_servicio.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
@@ -57,7 +58,7 @@ export class ServiciosService {
     return 'Servicio creado con exito';
   }
 
-  async updateServicioById(
+  /*   async updateServicioById(
     id: number,
     updateServicioDto: UpdateServicioDto,
   ): Promise<string> {
@@ -72,29 +73,40 @@ export class ServiciosService {
 
     await this.servicioRepository.save(servicio);
     return 'Servicio modificado con exito';
-  }
+  } */
 
-  /*async updateServicioById(
+  async updateServicioById(
     id: number,
     updateServicioDto: UpdateServicioDto,
-  ): Promise<string> {
+  ): Promise<any> {
     const existServicio = await this.servicioRepository.findOne(id);
     console.log('Update Servicio');
     console.log(existServicio);
     if (!existServicio) {
       throw new NotFoundException(`Servicio con id ${id} no existe`);
     }
+
+    console.log(updateServicioDto);
+    const { nombre, tipoServicioId } = updateServicioDto;
+
+    const Myobjeto: Partial<Servicio> = {
+      nombre: nombre,
+      tipoServicio: tipoServicioId,
+    };
+    console.log(Myobjeto);
+
     const updateResponse = await this.servicioRepository.update(
-      id,
-      updateServicioDto,
+      existServicio.id,
+      Myobjeto,
     );
+    console.log(updateResponse);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
       return 'Error de modificación';
     }
-  }*/
+  }
 
   async deleteServicio(id: number): Promise<string> {
     const existServicio = await this.servicioRepository.findOne(id);

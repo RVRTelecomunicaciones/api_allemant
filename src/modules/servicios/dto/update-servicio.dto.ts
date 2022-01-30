@@ -3,8 +3,8 @@ import { ApiProperty, PartialType } from '@nestjs/swagger';
 import { IsOptional, IsString, ValidateIf } from 'class-validator';
 import { CreateServicioDto } from './create-servicio.dto';
 
-export class UpdateServicioDto extends PartialType(CreateServicioDto) {
-  /*@ApiProperty({ required: false, description: 'Nombre de Servicio' })
+export class UpdateServicioDto {
+  @ApiProperty({ required: false, description: 'Nombre de Servicio' })
   @IsString({
     message: 'Ingrese texto para la descripción del Servicio',
   })
@@ -14,5 +14,5 @@ export class UpdateServicioDto extends PartialType(CreateServicioDto) {
 
   @ApiProperty({ required: false, description: 'Seleccione Tipo de Servicio' })
   @IsOptional()
-  tipo_servicio: TipoServicio;*/
+  tipoServicioId: TipoServicio;
 }
