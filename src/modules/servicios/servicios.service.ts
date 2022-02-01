@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { TipoServicio } from '../tipo-servicios/entities/tipo-servicio.entity';
 import { CreateServicioDto } from './dto/create-servicio.dto';
 import { UpdateServicioDto } from './dto/update-servicio.dto';
 import { Servicio } from './entities/servicio.entity';
@@ -57,35 +58,16 @@ export class ServiciosService {
     return 'Servicio creado con exito';
   }
 
-  /*   async updateServicioById(
-    id: number,
-    updateServicioDto: UpdateServicioDto,
-  ): Promise<string> {
-    const servicio = await this.servicioRepository.preload({
-      id: id,
-      ...updateServicioDto,
-    });
-
-    if (!servicio) {
-      throw new NotFoundException(`Servicio con id ${id} no existe`);
-    }
-
-    await this.servicioRepository.save(servicio);
-    return 'Servicio modificado con exito';
-  } */
-
   async updateServicioById(
     id: number,
     updateServicioDto: UpdateServicioDto,
   ): Promise<any> {
     const existServicio = await this.servicioRepository.findOne(id);
-    console.log('Update Servicio');
-    console.log(existServicio);
+
     if (!existServicio) {
       throw new NotFoundException(`Servicio con id ${id} no existe`);
     }
 
-    console.log(updateServicioDto);
     const { nombre, tipoServicio } = updateServicioDto;
 
     const Myobjeto: Partial<Servicio> = {
@@ -103,7 +85,7 @@ export class ServiciosService {
     if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
-      return 'Error de modificación';
+      return 'Errors de modificación';
     }
   }
 
