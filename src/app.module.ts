@@ -15,6 +15,7 @@ import { DesglosesModule } from './modules/desgloses/desgloses.module';
 import { MonedasModule } from './modules/monedas/monedas.module';
 import { EstadoCoordinacionesModule } from './modules/estado-coordinaciones/estado-coordinaciones.module';
 import { ServiciosModule } from './modules/servicios/servicios.module';
+import { RequisitosModule } from './modules/requisitos/requisitos.module';
 
 @Module({
   imports: [
@@ -61,6 +62,7 @@ import { ServiciosModule } from './modules/servicios/servicios.module';
     MonedasModule,
     EstadoCoordinacionesModule,
     ServiciosModule,
+    RequisitosModule,
   ],
   exports: [TypeOrmModule],
 

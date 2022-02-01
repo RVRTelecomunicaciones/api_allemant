@@ -1,7 +1,6 @@
 import { TipoServicio } from '@app/modules/tipo-servicios/entities/tipo-servicio.entity';
-import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, ValidateIf } from 'class-validator';
-import { CreateServicioDto } from './create-servicio.dto';
 
 export class UpdateServicioDto {
   @ApiProperty({ required: false, description: 'Nombre de Servicio' })
@@ -14,5 +13,5 @@ export class UpdateServicioDto {
 
   @ApiProperty({ required: false, description: 'Seleccione Tipo de Servicio' })
   @IsOptional()
-  tipoServicioId: TipoServicio;
+  tipoServicio: TipoServicio;
 }

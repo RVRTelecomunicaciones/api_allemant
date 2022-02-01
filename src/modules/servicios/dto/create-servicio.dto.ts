@@ -1,13 +1,5 @@
-import { TipoServicio } from '@app/modules/tipo-servicios/entities/tipo-servicio.entity';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {
-  IsInt,
-  IsNotEmpty,
-  IsString,
-  Length,
-  ValidateNested,
-} from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 import { Servicio } from '../entities/servicio.entity';
 export class CreateServicioDto {
   @ApiProperty({
@@ -34,5 +26,5 @@ export class CreateServicioDto {
   @IsNotEmpty({
     message: 'Requiere Obligatoriamente seleccionar un Tipo de Servicio',
   })
-  tipoServicioId: Servicio;
+  tipoServicio: Servicio;
 }
