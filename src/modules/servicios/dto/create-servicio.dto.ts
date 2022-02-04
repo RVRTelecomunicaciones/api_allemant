@@ -12,8 +12,8 @@ export class CreateServicioDto {
   @IsString({
     message: 'Ingrese texto para la descripción de la Moneda',
   })
-  @Length(3, 50, {
-    message: 'Se requiere de 3 a 50 caracteres',
+  @Length(3, 60, {
+    message: 'Se requiere de 3 a 60 caracteres',
   })
   nombre: string;
 

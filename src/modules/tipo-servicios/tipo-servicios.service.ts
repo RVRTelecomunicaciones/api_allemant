@@ -17,16 +17,15 @@ import { TipoServicio } from './entities/tipo-servicio.entity';
 export class TipoServiciosService {
   constructor(
     @InjectRepository(TipoServicio)
-    private tipoServicioRepository: Repository<TipoServicio>,
+    private repository: Repository<TipoServicio>,
   ) {}
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<TipoServicio>> {
-    const queryBuilder =
-      this.tipoServicioRepository.createQueryBuilder('tipoServicio');
+    const queryBuilder = this.repository.createQueryBuilder('co_servicio_tipo');
     queryBuilder
-      .orderBy('tipoServicio.createdAt', pageOptionsDto.order)
+      .orderBy('co_servicio_tipo.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
@@ -38,12 +37,10 @@ export class TipoServiciosService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createTipoServicio(
-    createTipoServicioDto: CreateTipoServicioDto,
-  ): Promise<string> {
-    const { nombre } = createTipoServicioDto;
+  async createTipoServicio(createDto: CreateTipoServicioDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<TipoServicio, 'id'> | undefined =
-      await this.tipoServicioRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -54,27 +51,22 @@ export class TipoServiciosService {
       );
     }
 
-    const tiposervicio: TipoServicio = this.tipoServicioRepository.create(
-      createTipoServicioDto,
-    );
-    await this.tipoServicioRepository.save(tiposervicio);
+    const tipoServicio: TipoServicio = this.repository.create(createDto);
+    await this.repository.save(tipoServicio);
     return 'Tipo de Servicio creado con éxito';
   }
 
   async updateTipoServicioById(
     id: number,
-    updateTipoServicioDto: UpdateTipoServicioDto,
+    updateDto: UpdateTipoServicioDto,
   ): Promise<string> {
-    const existTipoServicio = await this.tipoServicioRepository.findOne(id);
+    const existTipoServicio = await this.repository.findOne(id);
     console.log('Update Tipo de Servicio');
     console.log(existTipoServicio);
     if (!existTipoServicio) {
       throw new NotFoundException(`Tipo de Servicio id ${id} no existe`);
     }
-    const updateResponse = await this.tipoServicioRepository.update(
-      id,
-      updateTipoServicioDto,
-    );
+    const updateResponse = await this.repository.update(id, updateDto);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
@@ -84,14 +76,14 @@ export class TipoServiciosService {
   }
 
   async deleteTipoServicio(id: number): Promise<string> {
-    const existTipoServicio = await this.tipoServicioRepository.findOne(id);
+    const existTipoServicio = await this.repository.findOne(id);
     if (!existTipoServicio) {
       throw new HttpException(
         `Tipo de Servicio con id ${id} no existe`,
         HttpStatus.OK,
       );
     }
-    const deleteResponse = await this.tipoServicioRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';
     } else {

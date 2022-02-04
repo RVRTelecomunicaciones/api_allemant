@@ -18,12 +18,11 @@ import { Servicio } from './entities/servicio.entity';
 export class ServiciosService {
   constructor(
     @InjectRepository(Servicio)
-    private servicioRepository: Repository<Servicio>,
+    private repository: Repository<Servicio>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Servicio>> {
-    const queryBuilder =
-      this.servicioRepository.createQueryBuilder('co_servicio');
+    const queryBuilder = this.repository.createQueryBuilder('co_servicio');
     queryBuilder
       .leftJoinAndSelect('co_servicio.tipoServicio', 'servicios')
       .orderBy('co_servicio.createdAt', pageOptionsDto.order)
@@ -38,10 +37,10 @@ export class ServiciosService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createServicio(createServicioDto: CreateServicioDto): Promise<string> {
-    const { nombre } = createServicioDto;
+  async createServicio(createDto: CreateServicioDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<Servicio, 'id'> | undefined =
-      await this.servicioRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -52,23 +51,22 @@ export class ServiciosService {
       );
     }
 
-    const servicio: Servicio =
-      this.servicioRepository.create(createServicioDto);
-    await this.servicioRepository.save(servicio);
+    const servicio: Servicio = this.repository.create(createDto);
+    await this.repository.save(servicio);
     return 'Servicio creado con exito';
   }
 
   async updateServicioById(
     id: number,
-    updateServicioDto: UpdateServicioDto,
+    updateDto: UpdateServicioDto,
   ): Promise<any> {
-    const existServicio = await this.servicioRepository.findOne(id);
+    const existServicio = await this.repository.findOne(id);
 
     if (!existServicio) {
       throw new NotFoundException(`Servicio con id ${id} no existe`);
     }
 
-    const { nombre, tipoServicio } = updateServicioDto;
+    const { nombre, tipoServicio } = updateDto;
 
     const Myobjeto: Partial<Servicio> = {
       nombre: nombre,
@@ -76,7 +74,7 @@ export class ServiciosService {
     };
     console.log(Myobjeto);
 
-    const updateResponse = await this.servicioRepository.update(
+    const updateResponse = await this.repository.update(
       existServicio.id,
       Myobjeto,
     );
@@ -90,12 +88,12 @@ export class ServiciosService {
   }
 
   async deleteServicio(id: number): Promise<string> {
-    const existServicio = await this.servicioRepository.findOne(id);
+    const existServicio = await this.repository.findOne(id);
     if (!existServicio) {
       throw new HttpException(`Servicio con id ${id} no existe`, HttpStatus.OK);
     }
 
-    const deleteResponse = await this.servicioRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';

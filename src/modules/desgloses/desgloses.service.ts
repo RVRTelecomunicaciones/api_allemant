@@ -17,12 +17,11 @@ import { Desglose } from './entities/desglose.entity';
 export class DesglosesService {
   constructor(
     @InjectRepository(Desglose)
-    private desgloseRepository: Repository<Desglose>,
+    private repository: Repository<Desglose>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Desglose>> {
-    const queryBuilder =
-      this.desgloseRepository.createQueryBuilder('co_desglose');
+    const queryBuilder = this.repository.createQueryBuilder('co_desglose');
     queryBuilder
       .orderBy('co_desglose.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
@@ -36,10 +35,10 @@ export class DesglosesService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createDesglose(createDesgloseDto: CreateDesgloseDto): Promise<string> {
-    const { nombre } = createDesgloseDto;
+  async createDesglose(createDto: CreateDesgloseDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<Desglose, 'id'> | undefined =
-      await this.desgloseRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -50,26 +49,22 @@ export class DesglosesService {
       );
     }
 
-    const desglose: Desglose =
-      this.desgloseRepository.create(createDesgloseDto);
-    await this.desgloseRepository.save(desglose);
+    const desglose: Desglose = this.repository.create(createDto);
+    await this.repository.save(desglose);
     return 'Desglose creada con éxito';
   }
 
   async updateDesgloseById(
     id: number,
-    updateDesgloseDto: UpdateDesgloseDto,
+    updateDto: UpdateDesgloseDto,
   ): Promise<string> {
-    const existDesglose = await this.desgloseRepository.findOne(id);
+    const existDesglose = await this.repository.findOne(id);
     console.log('Update desglose');
     console.log(existDesglose);
     if (!existDesglose) {
       throw new NotFoundException(`Desglose con id ${id} no existe`);
     }
-    const updateResponse = await this.desgloseRepository.update(
-      id,
-      updateDesgloseDto,
-    );
+    const updateResponse = await this.repository.update(id, updateDto);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
@@ -79,11 +74,11 @@ export class DesglosesService {
   }
 
   async deleteDesglose(id: number): Promise<string> {
-    const existDesglose = await this.desgloseRepository.findOne(id);
+    const existDesglose = await this.repository.findOne(id);
     if (!existDesglose) {
       throw new HttpException(`Desglose con id ${id} no existe`, HttpStatus.OK);
     }
-    const deleteResponse = await this.desgloseRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';
     } else {

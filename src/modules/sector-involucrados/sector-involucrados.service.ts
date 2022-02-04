@@ -9,25 +9,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEstadoCotizacionDto } from './dto/create-estado-cotizacion.dto';
-import { UpdateEstadoCotizacionDto } from './dto/update-estado-cotizacion.dto';
-import { EstadoCotizacion } from './entities/estado-cotizacion.entity';
+import { CreateSectorInvolucradoDto } from './dto/create-sector-involucrado.dto';
+import { UpdateSectorInvolucradoDto } from './dto/update-sector-involucrado.dto';
+import { SectorInvolucrado } from './entities/sector-involucrado.entity';
 
 @Injectable()
-export class EstadoCotizacionesService {
+export class SectorInvolucradosService {
   constructor(
-    @InjectRepository(EstadoCotizacion)
-    private repository: Repository<EstadoCotizacion>,
+    @InjectRepository(SectorInvolucrado)
+    private repository: Repository<SectorInvolucrado>,
   ) {}
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<EstadoCotizacion>> {
+  ): Promise<PageDto<SectorInvolucrado>> {
     const queryBuilder = this.repository.createQueryBuilder(
-      'co_cotizacion_estado',
+      'co_involucrado_sector',
     );
     queryBuilder
-      .orderBy('co_cotizacion_estado.createdAt', pageOptionsDto.order)
+      .orderBy('co_involucrado_sector.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
@@ -39,36 +39,37 @@ export class EstadoCotizacionesService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createEstadoCotizacion(
-    createDto: CreateEstadoCotizacionDto,
+  async createSectorInvolucrado(
+    createDto: CreateSectorInvolucradoDto,
   ): Promise<string> {
     const { nombre } = createDto;
-    const findNameResult: Pick<EstadoCotizacion, 'id'> | undefined =
+    const findNameResult: Pick<SectorInvolucrado, 'id'> | undefined =
       await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
     if (findNameResult) {
       throw new HttpException(
-        `${nombre} el Estado de Cotización ya existe y no se puede crear repetidamente`,
+        `${nombre} el Sector de Involucrados actual ya existe y no se puede crear repetidamente`,
         HttpStatus.OK,
       );
     }
 
-    const estadoCotizacion: EstadoCotizacion =
+    const sectorInvolucrado: SectorInvolucrado =
       this.repository.create(createDto);
-    await this.repository.save(estadoCotizacion);
-    return 'Estado de cotización creado con éxito';
+    await this.repository.save(sectorInvolucrado);
+    return 'Sector de Involucrados creado con éxito';
   }
 
-  async updateEstadoCotizacionById(
+  async updateSectorInvolucradoById(
     id: number,
-    updateDto: UpdateEstadoCotizacionDto,
+    updateDto: UpdateSectorInvolucradoDto,
   ): Promise<string> {
-    const existEstadoCotizacion = await this.repository.findOne(id);
-
-    if (!existEstadoCotizacion) {
-      throw new NotFoundException(`Estado de Cotización id ${id} no existe`);
+    const existSectorInvolucrado = await this.repository.findOne(id);
+    console.log('Update Sector de Involucrados');
+    console.log(existSectorInvolucrado);
+    if (!existSectorInvolucrado) {
+      throw new NotFoundException(`Sector id ${id} no existe`);
     }
     const updateResponse = await this.repository.update(id, updateDto);
 
@@ -79,16 +80,10 @@ export class EstadoCotizacionesService {
     }
   }
 
-  async deleteEstadoCotizacion(id: number): Promise<string> {
-    const existEstadoCotizacion = await this.repository.findOne(id);
-    console.log(existEstadoCotizacion);
-    if (!existEstadoCotizacion) {
-      console.log('existEstadoCotizacion');
-      console.log(existEstadoCotizacion);
-      throw new HttpException(
-        `Estado de Cotización con id ${id} no existe`,
-        HttpStatus.OK,
-      );
+  async deleteSectorInvolucrado(id: number): Promise<string> {
+    const existSectorInvolucrado = await this.repository.findOne(id);
+    if (!existSectorInvolucrado) {
+      throw new HttpException(`Sector con id ${id} no existe`, HttpStatus.OK);
     }
     const deleteResponse = await this.repository.softDelete(id);
     if (deleteResponse.affected) {

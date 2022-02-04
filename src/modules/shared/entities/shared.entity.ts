@@ -1,4 +1,3 @@
-import { User } from '@app/modules/users/entities/user.entity';
 import { Transform, TransformFnParams } from 'class-transformer';
 import {
   BaseEntity,
@@ -6,9 +5,6 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   DeleteDateColumn,
-  Column,
-  JoinColumn,
-  ManyToOne,
 } from 'typeorm';
 
 export class SharedEntity extends BaseEntity {

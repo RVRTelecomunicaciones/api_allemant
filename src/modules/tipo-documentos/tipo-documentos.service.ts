@@ -9,24 +9,25 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { UpdateTipoServicioDto } from '../tipo-servicios/dto/update-tipo-servicio.dto';
-import { CreateTipoCotizacionDto } from './dto/create-tipo-cotizacion.dto';
-import { TipoCotizacion } from './entities/tipo-cotizacion.entity';
+import { CreateTipoDocumentoDto } from './dto/create-tipo-documento.dto';
+import { UpdateTipoDocumentoDto } from './dto/update-tipo-documento.dto';
+import { TipoDocumento } from './entities/tipo-documento.entity';
 
 @Injectable()
-export class TipoCotizacionesService {
+export class TipoDocumentosService {
   constructor(
-    @InjectRepository(TipoCotizacion)
-    private repository: Repository<TipoCotizacion>,
+    @InjectRepository(TipoDocumento)
+    private repository: Repository<TipoDocumento>,
   ) {}
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
-  ): Promise<PageDto<TipoCotizacion>> {
+  ): Promise<PageDto<TipoDocumento>> {
     const queryBuilder =
-      this.repository.createQueryBuilder('co_cotizacion_tipo');
+      this.repository.createQueryBuilder('co_documento_tipo');
+
     queryBuilder
-      .orderBy('co_cotizacion_tipo.createdAt', pageOptionsDto.order)
+      .orderBy('co_documento_tipo.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
       .take(pageOptionsDto.take);
 
@@ -38,37 +39,36 @@ export class TipoCotizacionesService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createTipoCotizacion(
-    createDto: CreateTipoCotizacionDto,
+  async createTipoDocumento(
+    createDto: CreateTipoDocumentoDto,
   ): Promise<string> {
     const { nombre } = createDto;
-    const findNameResult: Pick<TipoCotizacion, 'id'> | undefined =
+    const findNameResult: Pick<TipoDocumento, 'id'> | undefined =
       await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
-
     if (findNameResult) {
       throw new HttpException(
-        `${nombre} el Tipo de Cotización actual ya existe y no se puede crear repetidamente`,
+        `${nombre} el Tipo de Documento actual ya existe y no se puede crear repetidamente`,
         HttpStatus.OK,
       );
     }
 
-    const tipoCotizacion: TipoCotizacion = this.repository.create(createDto);
-    await this.repository.save(tipoCotizacion);
-    return 'Tipo de Cotización creado con éxito';
+    const tipoDocumento: TipoDocumento = this.repository.create(createDto);
+    await this.repository.save(tipoDocumento);
+    return 'Tipo de Documento creado con éxito';
   }
 
-  async updateTipoCotizacionById(
+  async updateTipoDocumentoById(
     id: number,
-    updateDto: UpdateTipoServicioDto,
+    updateDto: UpdateTipoDocumentoDto,
   ): Promise<string> {
-    const existTipoCotizacion = await this.repository.findOne(id);
-    console.log('Update Tipo de Cotización');
-    console.log(existTipoCotizacion);
-    if (!existTipoCotizacion) {
-      throw new NotFoundException(`Tipo de Cotización con id ${id} no existe`);
+    const existTipoDocumento = await this.repository.findOne(id);
+    console.log('Update Tipo de Documento');
+    console.log(existTipoDocumento);
+    if (!existTipoDocumento) {
+      throw new NotFoundException(`Tipo de Documento id ${id} no existe`);
     }
     const updateResponse = await this.repository.update(id, updateDto);
 
@@ -79,16 +79,15 @@ export class TipoCotizacionesService {
     }
   }
 
-  async deleteTipoCotizacion(id: number): Promise<string> {
-    const existTipoCotizacion = await this.repository.findOne(id);
-    if (!existTipoCotizacion) {
+  async deleteTipoDocumento(id: number): Promise<string> {
+    const existTipoDocumento = await this.repository.findOne(id);
+    if (!existTipoDocumento) {
       throw new HttpException(
-        `Tipo de Cotización con id ${id} no existe`,
+        `Tipo de Documento con id ${id} no existe`,
         HttpStatus.OK,
       );
     }
     const deleteResponse = await this.repository.softDelete(id);
-
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';
     } else {

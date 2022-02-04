@@ -17,13 +17,13 @@ import { EstadoCoordinacion } from './entities/estado-coordinacion.entity';
 export class EstadoCoordinacionesService {
   constructor(
     @InjectRepository(EstadoCoordinacion)
-    private estadoCoodinacionRepository: Repository<EstadoCoordinacion>,
+    private repository: Repository<EstadoCoordinacion>,
   ) {}
 
   async findAll(
     pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<EstadoCoordinacion>> {
-    const queryBuilder = this.estadoCoodinacionRepository.createQueryBuilder(
+    const queryBuilder = this.repository.createQueryBuilder(
       'coor_coordinacion_estado',
     );
     queryBuilder
@@ -40,11 +40,11 @@ export class EstadoCoordinacionesService {
   }
 
   async createEstadoCoordinacion(
-    createEstadoCOordinacionDto: CreateEstadoCoordinacionDto,
+    createDto: CreateEstadoCoordinacionDto,
   ): Promise<string> {
-    const { nombre } = createEstadoCOordinacionDto;
+    const { nombre } = createDto;
     const findNameResult: Pick<EstadoCoordinacion, 'id'> | undefined =
-      await this.estadoCoodinacionRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -56,26 +56,22 @@ export class EstadoCoordinacionesService {
     }
 
     const estadoCoordinacion: EstadoCoordinacion =
-      this.estadoCoodinacionRepository.create(createEstadoCOordinacionDto);
-    await this.estadoCoodinacionRepository.save(estadoCoordinacion);
-    return 'Estado de Coordión creado con éxito';
+      this.repository.create(createDto);
+    await this.repository.save(estadoCoordinacion);
+    return 'Estado de Coordinación creado con éxito';
   }
 
   async updateEstadoCoordinacionById(
     id: number,
-    updateEstadoCoordinacionDto: UpdateEstadoCoordinacionDto,
+    updateDto: UpdateEstadoCoordinacionDto,
   ): Promise<string> {
-    const existEstadoCoordinacion =
-      await this.estadoCoodinacionRepository.findOne(id);
+    const existEstadoCoordinacion = await this.repository.findOne(id);
     console.log('Update Estado de Coordinación');
     console.log(existEstadoCoordinacion);
     if (!existEstadoCoordinacion) {
       throw new NotFoundException(`Estado de Coordinación id ${id} no existe`);
     }
-    const updateResponse = await this.estadoCoodinacionRepository.update(
-      id,
-      updateEstadoCoordinacionDto,
-    );
+    const updateResponse = await this.repository.update(id, updateDto);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
@@ -85,8 +81,7 @@ export class EstadoCoordinacionesService {
   }
 
   async deleteEstadoCoordinacion(id: number): Promise<string> {
-    const existEstadoCoordinacion =
-      await this.estadoCoodinacionRepository.findOne(id);
+    const existEstadoCoordinacion = await this.repository.findOne(id);
     if (!existEstadoCoordinacion) {
       throw new HttpException(
         `Estado de Coordinación con id ${id} no existe`,
@@ -94,9 +89,7 @@ export class EstadoCoordinacionesService {
       );
     }
 
-    const deleteResponse = await this.estadoCoodinacionRepository.softDelete(
-      id,
-    );
+    const deleteResponse = await this.repository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';

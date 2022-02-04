@@ -17,11 +17,11 @@ import { Moneda } from './entities/moneda.entity';
 export class MonedasService {
   constructor(
     @InjectRepository(Moneda)
-    private monedaRepository: Repository<Moneda>,
+    private repository: Repository<Moneda>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Moneda>> {
-    const queryBuilder = this.monedaRepository.createQueryBuilder('co_moneda');
+    const queryBuilder = this.repository.createQueryBuilder('co_moneda');
     queryBuilder
       .orderBy('co_moneda.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
@@ -35,10 +35,10 @@ export class MonedasService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createMoneda(createMonedaDto: CreateMonedaDto): Promise<string> {
-    const { nombre } = createMonedaDto;
+  async createMoneda(createDto: CreateMonedaDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<Moneda, 'id'> | undefined =
-      await this.monedaRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -49,25 +49,22 @@ export class MonedasService {
       );
     }
 
-    const moneda: Moneda = this.monedaRepository.create(createMonedaDto);
-    await this.monedaRepository.save(moneda);
+    const moneda: Moneda = this.repository.create(createDto);
+    await this.repository.save(moneda);
     return 'Moneda creada con exito';
   }
 
   async updateMonedaById(
     id: number,
-    updateMonedaDto: UpdateMonedaDto,
+    updateDto: UpdateMonedaDto,
   ): Promise<string> {
-    const existMoneda = await this.monedaRepository.findOne(id);
+    const existMoneda = await this.repository.findOne(id);
     console.log('Update Moneda');
     console.log(existMoneda);
     if (!existMoneda) {
       throw new NotFoundException(`Moneda con id ${id} no existe`);
     }
-    const updateResponse = await this.monedaRepository.update(
-      id,
-      updateMonedaDto,
-    );
+    const updateResponse = await this.repository.update(id, updateDto);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
@@ -77,12 +74,12 @@ export class MonedasService {
   }
 
   async deleteMoneda(id: number): Promise<string> {
-    const existMoneda = await this.monedaRepository.findOne(id);
+    const existMoneda = await this.repository.findOne(id);
     if (!existMoneda) {
       throw new HttpException(`Moneda con id ${id} no existe`, HttpStatus.OK);
     }
 
-    const deleteResponse = await this.monedaRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';

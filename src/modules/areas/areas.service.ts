@@ -17,11 +17,11 @@ import { Area } from './entities/area.entity';
 export class AreasService {
   constructor(
     @InjectRepository(Area)
-    private areaRepository: Repository<Area>,
+    private repository: Repository<Area>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Area>> {
-    const queryBuilder = this.areaRepository.createQueryBuilder('area');
+    const queryBuilder = this.repository.createQueryBuilder('area');
     queryBuilder
       .orderBy({ 'area.created_at': pageOptionsDto.order })
       .skip(pageOptionsDto.skip)
@@ -35,10 +35,10 @@ export class AreasService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createArea(createAreaDto: CreateAreaDto): Promise<string> {
-    const { nombre } = createAreaDto;
+  async createArea(createDto: CreateAreaDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<Area, 'id'> | undefined =
-      await this.areaRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -49,22 +49,19 @@ export class AreasService {
       );
     }
 
-    const area: Area = this.areaRepository.create(createAreaDto);
-    await this.areaRepository.save(area);
+    const area: Area = this.repository.create(createDto);
+    await this.repository.save(area);
     return 'Área creada con éxito';
   }
 
-  async updateAreaById(
-    id: number,
-    updateAreaDto: UpdateAreaDto,
-  ): Promise<string> {
-    const existArea = await this.areaRepository.findOne(id);
+  async updateAreaById(id: number, updateDto: UpdateAreaDto): Promise<string> {
+    const existArea = await this.repository.findOne(id);
     console.log('Update Area');
     console.log(existArea);
     if (!existArea) {
       throw new NotFoundException(`Área con id ${id} no existe`);
     }
-    const updateResponse = await this.areaRepository.update(id, updateAreaDto);
+    const updateResponse = await this.repository.update(id, updateDto);
     if (updateResponse.affected) {
       return 'Modificación exitosa';
     } else {
@@ -73,12 +70,12 @@ export class AreasService {
   }
 
   async deleteArea(id: number): Promise<string> {
-    const existArea = await this.areaRepository.findOne(id);
+    const existArea = await this.repository.findOne(id);
     if (!existArea) {
       throw new HttpException(`Área con id ${id} no existe`, HttpStatus.OK);
     }
 
-    const deleteResponse = await this.areaRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';

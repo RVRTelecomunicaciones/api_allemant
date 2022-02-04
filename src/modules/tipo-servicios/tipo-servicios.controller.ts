@@ -30,7 +30,7 @@ import { TipoServiciosService } from './tipo-servicios.service';
 @ApiAuth()
 @Controller('tipo-servicios/')
 export class TipoServiciosController {
-  constructor(private tipoServicioService: TipoServiciosService) {}
+  constructor(private service: TipoServiciosService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Tipo de Servicios',
@@ -47,7 +47,7 @@ export class TipoServiciosController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<TipoServicio>> {
-    return this.tipoServicioService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -56,16 +56,31 @@ export class TipoServiciosController {
   })
   @ApiOkResponse({
     type: String,
-    description: 'Tipo de Servicios creada correctamente',
+    description: 'Tipo de Servicios creado correctamente',
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createRole(
-    @Body() createTipoServicioDto: CreateTipoServicioDto,
+  async createTipoServicio(
+    @Body() createDto: CreateTipoServicioDto,
   ): Promise<string> {
-    return await this.tipoServicioService.createTipoServicio(
-      createTipoServicioDto,
-    );
+    return await this.service.createTipoServicio(createDto);
+  }
+
+  @ApiOperation({
+    summary: 'Modificar Tipo de Servicio',
+    description: 'Modificar el Tipo de Servicio correspondiente',
+  })
+  @ApiOkResponse({
+    type: String,
+    description: 'Tipo de Servicio modificado correctamente',
+  })
+  @HttpCode(HttpStatus.OK)
+  @Patch(':id')
+  async modifyTipoServicioById(
+    @Param('id', new ParseIntPipe()) id: number,
+    @Body() updateDto: UpdateTipoServicioDto,
+  ): Promise<string> {
+    return await this.service.updateTipoServicioById(id, updateDto);
   }
 
   @ApiOperation({
@@ -81,26 +96,6 @@ export class TipoServiciosController {
   async destroyTipoServicioById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.tipoServicioService.deleteTipoServicio(id);
-  }
-
-  @ApiOperation({
-    summary: 'Modificar Tipo de Servicio',
-    description: 'Modificar el Tipo de Servicio correspondiente',
-  })
-  @ApiOkResponse({
-    type: String,
-    description: 'Tipo de Servicio modificado correctamente',
-  })
-  @HttpCode(HttpStatus.OK)
-  @Patch(':id')
-  async modifyTipoServicioById(
-    @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateTipoServicioDto: UpdateTipoServicioDto,
-  ): Promise<string> {
-    return await this.tipoServicioService.updateTipoServicioById(
-      id,
-      updateTipoServicioDto,
-    );
+    return await this.service.deleteTipoServicio(id);
   }
 }

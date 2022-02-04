@@ -30,7 +30,7 @@ import { Desglose } from './entities/desglose.entity';
 @ApiAuth()
 @Controller('desgloses/')
 export class DesglosesController {
-  constructor(private desgloseServicio: DesglosesService) {}
+  constructor(private service: DesglosesService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Desgloses',
@@ -47,7 +47,7 @@ export class DesglosesController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Desglose>> {
-    return this.desgloseServicio.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -60,10 +60,8 @@ export class DesglosesController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createDesglose(
-    @Body() createDesgloseDto: CreateDesgloseDto,
-  ): Promise<string> {
-    return await this.desgloseServicio.createDesglose(createDesgloseDto);
+  async createDesglose(@Body() createDto: CreateDesgloseDto): Promise<string> {
+    return await this.service.createDesglose(createDto);
   }
 
   @ApiOperation({
@@ -78,17 +76,14 @@ export class DesglosesController {
   @Patch(':id')
   async modifyDesgloseById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateDesgloseDto: UpdateDesgloseDto,
+    @Body() updateDto: UpdateDesgloseDto,
   ): Promise<string> {
-    return await this.desgloseServicio.updateDesgloseById(
-      id,
-      updateDesgloseDto,
-    );
+    return await this.service.updateDesgloseById(id, updateDto);
   }
 
   @ApiOperation({
     summary: 'Eliminar Desglose',
-    description: 'Eliminar Desglose basado en la identificación del Area',
+    description: 'Eliminar Desglose basado en la identificación',
   })
   @ApiOkResponse({
     type: String,
@@ -99,6 +94,6 @@ export class DesglosesController {
   async destroyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.desgloseServicio.deleteDesglose(id);
+    return await this.service.deleteDesglose(id);
   }
 }

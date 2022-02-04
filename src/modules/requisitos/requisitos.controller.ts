@@ -30,7 +30,7 @@ import { RequisitosService } from './requisitos.service';
 @ApiAuth()
 @Controller('requisitos/')
 export class RequisitosController {
-  constructor(private requisitoService: RequisitosService) {}
+  constructor(private service: RequisitosService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Requistos',
@@ -47,7 +47,7 @@ export class RequisitosController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Requisito>> {
-    return this.requisitoService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -60,10 +60,10 @@ export class RequisitosController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createArea(
-    @Body() createRequisitoDto: CreateRequisitoDto,
+  async createRequisito(
+    @Body() createDto: CreateRequisitoDto,
   ): Promise<string> {
-    return await this.requisitoService.createRequisito(createRequisitoDto);
+    return await this.service.createRequisito(createDto);
   }
 
   @ApiOperation({
@@ -76,14 +76,11 @@ export class RequisitosController {
   })
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  async modifyAreaById(
+  async modifyRequisitoById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateRequisitoDto: UpdateRequisitoDto,
+    @Body() updateDto: UpdateRequisitoDto,
   ): Promise<string> {
-    return await this.requisitoService.updateRequisitoById(
-      id,
-      updateRequisitoDto,
-    );
+    return await this.service.updateRequisitoById(id, updateDto);
   }
 
   @ApiOperation({
@@ -96,9 +93,9 @@ export class RequisitosController {
   })
   @HttpCode(HttpStatus.OK)
   @Delete(':id')
-  async destroyMonedaById(
+  async destroyRequisitoById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.requisitoService.deleteRequisito(id);
+    return await this.service.deleteRequisito(id);
   }
 }

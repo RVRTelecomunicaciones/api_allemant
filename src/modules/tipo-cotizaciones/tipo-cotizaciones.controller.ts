@@ -30,10 +30,10 @@ import { TipoCotizacionesService } from './tipo-cotizaciones.service';
 @ApiAuth()
 @Controller('tipo-cotizaciones/')
 export class TipoCotizacionesController {
-  constructor(private tipoCotizacionService: TipoCotizacionesService) {}
+  constructor(private service: TipoCotizacionesService) {}
 
   @ApiOperation({
-    summary: 'Consultar Tipo de Cotizción',
+    summary: 'Consultar Tipo de Cotización',
     description: 'Consulta de Tipo de Cotizaciones',
     externalDocs: {
       url: 'xx/list?order=ASC&page=1&take=20',
@@ -47,7 +47,7 @@ export class TipoCotizacionesController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<TipoCotizacion>> {
-    return this.tipoCotizacionService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -61,11 +61,9 @@ export class TipoCotizacionesController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createTipoCotizacion(
-    @Body() createTipoCotizacionDto: CreateTipoCotizacionDto,
+    @Body() createDto: CreateTipoCotizacionDto,
   ): Promise<string> {
-    return await this.tipoCotizacionService.createTipoCotizacion(
-      createTipoCotizacionDto,
-    );
+    return await this.service.createTipoCotizacion(createDto);
   }
 
   @ApiOperation({
@@ -76,12 +74,9 @@ export class TipoCotizacionesController {
   @Patch(':id')
   async modifyTipoCotizacionById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateTipoCotizacion: UpdateTipoCotizacionDto,
+    @Body() updateDto: UpdateTipoCotizacionDto,
   ): Promise<string> {
-    return await this.tipoCotizacionService.updateTipoCotizacionById(
-      id,
-      updateTipoCotizacion,
-    );
+    return await this.service.updateTipoCotizacionById(id, updateDto);
   }
 
   @ApiOperation({
@@ -97,6 +92,6 @@ export class TipoCotizacionesController {
   async destroyTipoCotizacionById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.tipoCotizacionService.deleteTipoCotizacion(id);
+    return await this.service.deleteTipoCotizacion(id);
   }
 }

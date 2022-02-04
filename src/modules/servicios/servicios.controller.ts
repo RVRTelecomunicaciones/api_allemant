@@ -30,7 +30,7 @@ import { ServiciosService } from './servicios.service';
 @ApiAuth()
 @Controller('servicios/')
 export class ServiciosController {
-  constructor(private servicioService: ServiciosService) {}
+  constructor(private service: ServiciosService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Servicios',
@@ -47,7 +47,7 @@ export class ServiciosController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Servicio>> {
-    return this.servicioService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -60,10 +60,8 @@ export class ServiciosController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createServicio(
-    @Body() createServicioDto: CreateServicioDto,
-  ): Promise<string> {
-    return await this.servicioService.createServicio(createServicioDto);
+  async createServicio(@Body() createDto: CreateServicioDto): Promise<string> {
+    return await this.service.createServicio(createDto);
   }
 
   @ApiOperation({
@@ -76,11 +74,11 @@ export class ServiciosController {
   })
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  async modifyAreaById(
+  async modifyServicioById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateServicioDto: UpdateServicioDto,
+    @Body() updateDto: UpdateServicioDto,
   ): Promise<string> {
-    return await this.servicioService.updateServicioById(id, updateServicioDto);
+    return await this.service.updateServicioById(id, updateDto);
   }
 
   @ApiOperation({
@@ -96,6 +94,6 @@ export class ServiciosController {
   async destroyServicioById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.servicioService.deleteServicio(id);
+    return await this.service.deleteServicio(id);
   }
 }

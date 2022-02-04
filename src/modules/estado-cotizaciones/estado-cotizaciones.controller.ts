@@ -30,7 +30,7 @@ import { EstadoCotizacionesService } from './estado-cotizaciones.service';
 @ApiAuth()
 @Controller('estado-cotizaciones/')
 export class EstadoCotizacionesController {
-  constructor(private estadoCotizacionService: EstadoCotizacionesService) {}
+  constructor(private service: EstadoCotizacionesService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Estados de Cotización',
@@ -47,7 +47,7 @@ export class EstadoCotizacionesController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<EstadoCotizacion>> {
-    return this.estadoCotizacionService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -61,11 +61,9 @@ export class EstadoCotizacionesController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createArea(
-    @Body() createEstadoCotizacionDto: CreateEstadoCotizacionDto,
+    @Body() createDto: CreateEstadoCotizacionDto,
   ): Promise<string> {
-    return await this.estadoCotizacionService.createEstadoCotizacion(
-      createEstadoCotizacionDto,
-    );
+    return await this.service.createEstadoCotizacion(createDto);
   }
 
   @ApiOperation({
@@ -80,12 +78,9 @@ export class EstadoCotizacionesController {
   @Patch(':id')
   async modifyEstadoCotizacionById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateEstadoCotizacionDto: UpdateEstadoCotizacionDto,
+    @Body() updateDto: UpdateEstadoCotizacionDto,
   ): Promise<string> {
-    return await this.estadoCotizacionService.updateEstadoCotizacionById(
-      id,
-      updateEstadoCotizacionDto,
-    );
+    return await this.service.updateEstadoCotizacionById(id, updateDto);
   }
 
   @ApiOperation({
@@ -101,6 +96,6 @@ export class EstadoCotizacionesController {
   async destroyEstadoCotizacionById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.estadoCotizacionService.deleteEstadoCotizacion(id);
+    return await this.service.deleteEstadoCotizacion(id);
   }
 }

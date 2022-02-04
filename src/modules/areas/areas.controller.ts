@@ -33,7 +33,7 @@ import { Area } from './entities/area.entity';
 /* @UseGuards(JwtAuthGuard)
  */ @Controller('areas/')
 export class AreasController {
-  constructor(private areaService: AreasService) {}
+  constructor(private service: AreasService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Areas',
@@ -50,7 +50,7 @@ export class AreasController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Area>> {
-    return this.areaService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -63,8 +63,8 @@ export class AreasController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createArea(@Body() createAreaDto: CreateAreaDto): Promise<string> {
-    return await this.areaService.createArea(createAreaDto);
+  async createArea(@Body() createDto: CreateAreaDto): Promise<string> {
+    return await this.service.createArea(createDto);
   }
 
   @ApiOperation({
@@ -79,14 +79,14 @@ export class AreasController {
   @Patch(':id')
   async modifyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateAreaDto: UpdateAreaDto,
+    @Body() updateDto: UpdateAreaDto,
   ): Promise<string> {
-    return await this.areaService.updateAreaById(id, updateAreaDto);
+    return await this.service.updateAreaById(id, updateDto);
   }
 
   @ApiOperation({
     summary: 'Eliminar Área',
-    description: 'Eliminar Área basado en la identificación del Area',
+    description: 'Eliminar Área basado en la identificación',
   })
   @ApiOkResponse({
     type: String,
@@ -97,6 +97,6 @@ export class AreasController {
   async destroyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.areaService.deleteArea(id);
+    return await this.service.deleteArea(id);
   }
 }

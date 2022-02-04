@@ -17,12 +17,11 @@ import { Requisito } from './entities/requisito.entity';
 export class RequisitosService {
   constructor(
     @InjectRepository(Requisito)
-    private requisitoRepository: Repository<Requisito>,
+    private repository: Repository<Requisito>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Requisito>> {
-    const queryBuilder =
-      this.requisitoRepository.createQueryBuilder('co_requisito');
+    const queryBuilder = this.repository.createQueryBuilder('co_requisito');
     queryBuilder
       .orderBy('co_requisito.createdAt', pageOptionsDto.order)
       .skip(pageOptionsDto.skip)
@@ -36,12 +35,10 @@ export class RequisitosService {
     return new PageDto(entities, pageMetaDto);
   }
 
-  async createRequisito(
-    createRequisitoDto: CreateRequisitoDto,
-  ): Promise<string> {
-    const { nombre } = createRequisitoDto;
+  async createRequisito(createDto: CreateRequisitoDto): Promise<string> {
+    const { nombre } = createDto;
     const findNameResult: Pick<Requisito, 'id'> | undefined =
-      await this.requisitoRepository.findOne({
+      await this.repository.findOne({
         where: { nombre },
         select: ['id'],
       });
@@ -52,26 +49,22 @@ export class RequisitosService {
       );
     }
 
-    const requisito: Requisito =
-      this.requisitoRepository.create(createRequisitoDto);
-    await this.requisitoRepository.save(requisito);
+    const requisito: Requisito = this.repository.create(createDto);
+    await this.repository.save(requisito);
     return 'Requisito creado con exito';
   }
 
   async updateRequisitoById(
     id: number,
-    updateRequisitoDto: UpdateRequisitoDto,
+    updateDto: UpdateRequisitoDto,
   ): Promise<string> {
-    const existRequisito = await this.requisitoRepository.findOne(id);
+    const existRequisito = await this.repository.findOne(id);
     console.log('Update Requisito');
     console.log(existRequisito);
     if (!existRequisito) {
-      throw new NotFoundException(`Moneda con id ${id} no existe`);
+      throw new NotFoundException(`Requisito con id ${id} no existe`);
     }
-    const updateResponse = await this.requisitoRepository.update(
-      id,
-      updateRequisitoDto,
-    );
+    const updateResponse = await this.repository.update(id, updateDto);
 
     if (updateResponse.affected) {
       return 'Modificación exitosa';
@@ -81,7 +74,7 @@ export class RequisitosService {
   }
 
   async deleteRequisito(id: number): Promise<string> {
-    const existRequisito = await this.requisitoRepository.findOne(id);
+    const existRequisito = await this.repository.findOne(id);
     if (!existRequisito) {
       throw new HttpException(
         `Requisito con id ${id} no existe`,
@@ -89,7 +82,7 @@ export class RequisitosService {
       );
     }
 
-    const deleteResponse = await this.requisitoRepository.softDelete(id);
+    const deleteResponse = await this.repository.softDelete(id);
 
     if (deleteResponse.affected) {
       return 'Eliminado con éxito';

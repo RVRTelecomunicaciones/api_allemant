@@ -30,7 +30,7 @@ import { EstadoCoordinacionesService } from './estado-coordinaciones.service';
 @ApiAuth()
 @Controller('estado-coordinaciones/')
 export class EstadoCoordinacionesController {
-  constructor(private estadoCoordinacionService: EstadoCoordinacionesService) {}
+  constructor(private service: EstadoCoordinacionesService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Estados de Coordinación',
@@ -47,7 +47,7 @@ export class EstadoCoordinacionesController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<EstadoCoordinacion>> {
-    return this.estadoCoordinacionService.findAll(pageOptionsDto);
+    return this.service.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -61,11 +61,9 @@ export class EstadoCoordinacionesController {
   @HttpCode(HttpStatus.CREATED)
   @Post()
   async createArea(
-    @Body() createEstadoCoordinacionDto: CreateEstadoCoordinacionDto,
+    @Body() createDto: CreateEstadoCoordinacionDto,
   ): Promise<string> {
-    return await this.estadoCoordinacionService.createEstadoCoordinacion(
-      createEstadoCoordinacionDto,
-    );
+    return await this.service.createEstadoCoordinacion(createDto);
   }
 
   @ApiOperation({
@@ -80,12 +78,9 @@ export class EstadoCoordinacionesController {
   @Patch(':id')
   async modifyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateEstadoCoordinacionDto: UpdateEstadoCoordinacionDto,
+    @Body() updateDto: UpdateEstadoCoordinacionDto,
   ): Promise<string> {
-    return await this.estadoCoordinacionService.updateEstadoCoordinacionById(
-      id,
-      updateEstadoCoordinacionDto,
-    );
+    return await this.service.updateEstadoCoordinacionById(id, updateDto);
   }
 
   @ApiOperation({
@@ -102,6 +97,6 @@ export class EstadoCoordinacionesController {
   async destroyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.estadoCoordinacionService.deleteEstadoCoordinacion(id);
+    return await this.service.deleteEstadoCoordinacion(id);
   }
 }
