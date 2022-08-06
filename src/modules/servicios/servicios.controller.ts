@@ -21,6 +21,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { CreateServicioDto } from './dto/create-servicio.dto';
+import { ServicioRequisitoReqDto } from './dto/serviciorequisito.req.dto';
 import { UpdateServicioDto } from './dto/update-servicio.dto';
 import { Servicio } from './entities/servicio.entity';
 import { ServiciosService } from './servicios.service';
@@ -30,7 +31,7 @@ import { ServiciosService } from './servicios.service';
 @ApiAuth()
 @Controller('servicios/')
 export class ServiciosController {
-  constructor(private service: ServiciosService) {}
+  constructor(private servicioService: ServiciosService) {}
 
   @ApiOperation({
     summary: 'Consultar lista de Servicios',
@@ -47,7 +48,7 @@ export class ServiciosController {
   async listar(
     @Query() pageOptionsDto: PageOptionsDto,
   ): Promise<PageDto<Servicio>> {
-    return this.service.findAll(pageOptionsDto);
+    return this.servicioService.findAll(pageOptionsDto);
   }
 
   @ApiOperation({
@@ -60,8 +61,12 @@ export class ServiciosController {
   })
   @HttpCode(HttpStatus.CREATED)
   @Post()
-  async createServicio(@Body() createDto: CreateServicioDto): Promise<string> {
-    return await this.service.createServicio(createDto);
+  async createServicio(
+    @Body() createServicioDto: CreateServicioDto,
+  ): Promise<string> {
+    return await this.servicioService.createServicioRequisito(
+      createServicioDto,
+    );
   }
 
   @ApiOperation({
@@ -74,11 +79,11 @@ export class ServiciosController {
   })
   @HttpCode(HttpStatus.OK)
   @Patch(':id')
-  async modifyServicioById(
+  async modifyAreaById(
     @Param('id', new ParseIntPipe()) id: number,
-    @Body() updateDto: UpdateServicioDto,
+    @Body() updateServicioDto: UpdateServicioDto,
   ): Promise<string> {
-    return await this.service.updateServicioById(id, updateDto);
+    return await this.servicioService.updateServicioById(id, updateServicioDto);
   }
 
   @ApiOperation({
@@ -94,6 +99,6 @@ export class ServiciosController {
   async destroyServicioById(
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<string> {
-    return await this.service.deleteServicio(id);
+    return await this.servicioService.deleteServicio(id);
   }
 }

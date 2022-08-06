@@ -1,3 +1,4 @@
+import { Servicio } from '@app/modules/servicios/entities/servicio.entity';
 import { SharedEntity } from '@app/modules/shared/entities/shared.entity';
 import { Column, Entity, ManyToMany } from 'typeorm';
 
@@ -6,6 +7,8 @@ export class Requisito extends SharedEntity {
   @Column({ type: 'varchar', nullable: false, length: 100, name: 'nombre' })
   nombre: string;
 
-  /*@ManyToMany(() => Servicio, (servicio) => servicio.requisitos)
-  servicios: Servicio[];*/
+  @ManyToMany(() => Servicio, (servicio) => servicio.requisitos, {
+    cascade: true,
+  })
+  servicios: Servicio[];
 }

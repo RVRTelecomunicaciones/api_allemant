@@ -105,20 +105,18 @@ export class AuthService {
 
     await this.tokenService.create(userData.id, tokens.refreshToken);
 
-    await this.mailService.sendVerifyEmailMail(
+    await this.mailService.sendVerifyEmailSendGrid(
       createUserDto.username,
       createUserDto.email,
       activationLink,
     );
-    /* await this.mailService.sendMail({
-      to: createUserDto.email,
-      link: `${APP_CONFIG.APP.CLIENT_URL}/auth/activation/` + activationLink,
-    });*/
+
     return {
       user: userData,
       ...tokens,
     };
   }
+
   async activation(activationLink: string) {
     const user = await this.userService.findByCondition({ activationLink });
 

@@ -13,7 +13,7 @@ export class Token {
   @PrimaryGeneratedColumn()
   id: ObjectID;
 
-  @Column()
+  @Column({ type: 'text' })
   refreshToken: string;
 
   @OneToOne(() => User)

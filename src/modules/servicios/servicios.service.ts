@@ -7,9 +7,13 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { PartialType } from '@nestjs/swagger';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { json } from 'stream/consumers';
+import { EntityManager, getManager, Repository } from 'typeorm';
+import { Requisito } from '../requisitos/entities/requisito.entity';
 import { CreateServicioDto } from './dto/create-servicio.dto';
+import { ServicioRequisitoReqDto } from './dto/serviciorequisito.req.dto';
 import { UpdateServicioDto } from './dto/update-servicio.dto';
 import { Servicio } from './entities/servicio.entity';
 
@@ -18,6 +22,8 @@ export class ServiciosService {
   constructor(
     @InjectRepository(Servicio)
     private repository: Repository<Servicio>,
+    @InjectRepository(Requisito)
+    private repositoryRequisito: Repository<Requisito>,
   ) {}
 
   async findAll(pageOptionsDto: PageOptionsDto): Promise<PageDto<Servicio>> {
@@ -53,6 +59,51 @@ export class ServiciosService {
     const servicio: Servicio = this.repository.create(createDto);
     await this.repository.save(servicio);
     return 'Servicio creado con exito';
+  }
+
+  async createServicioRequisito(
+    servicioRequisito: CreateServicioDto,
+  ): Promise<any> {
+    const servicio = await this.repository.create(servicioRequisito);
+    console.log(servicio);
+
+    /*  const servicio2: Servicio = { ...servicio, requisitos: servicioRequisito.requisito[] };
+    await this.repository.save(servicio2);
+    console.log('A:' + JSON.stringify(servicio));
+    const requisitos = await this.repositoryRequisito.findByIds(
+      servicio.requisitos,
+      { relations: ['requisitos'] },
+    );
+    console.log('b:' + JSON.stringify(requisitos));
+
+    for (const requisito of requisitos) {
+      requisito.servicios.push(servicio);
+    }
+    return this.repositoryRequisito.save(requisitos); */
+
+    /* return getManager()
+      .transaction(async (entityManager: EntityManager) => {
+        const { servicio, requisitoId } = servicioRequisito;
+        await entityManager.delete<Servicio>(Servicio, servicio);
+
+        const newRequisit: any = requisitoId.map((item: any) => {
+          return {
+            servicio,
+            requisitoID: item,
+          };
+        });
+
+        console.log(newRequisit);
+
+        const result = entityManager.create<Servicio>(Servicio, newRequisit);
+        await entityManager.save<Servicio>(result);
+      })
+      .then(() => {
+        return '分配菜单权限成功';
+      })
+      .catch((e: HttpException) => {
+        throw new HttpException(e, HttpStatus.OK);
+      }); */
   }
 
   async updateServicioById(

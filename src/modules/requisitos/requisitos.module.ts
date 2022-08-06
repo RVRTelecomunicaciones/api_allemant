@@ -8,5 +8,6 @@ import { Requisito } from './entities/requisito.entity';
   imports: [TypeOrmModule.forFeature([Requisito])],
   providers: [RequisitosService],
   controllers: [RequisitosController],
+  exports: [RequisitosService],
 })
 export class RequisitosModule {}
